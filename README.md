@@ -11,3 +11,7 @@ This script may not identify all issues that prevent successful credentialed sca
 _This tool is not an officially supported Tenable project._ 
 
 _Use of this tool is subject to the terms and conditions identified below, and is not subject to any license agreement you may have with Tenable._
+
+## License
+
+GNU General Public License v3.0; see LICENSE

@@ -119,7 +119,7 @@ security model for local accounts"
 		info      	= "To perform a successful remote authenticated scan, Nessus must use an account that is a member of the local Administrators group. This script MUST BE EDITED to include the authorized administrator username or group."
 		solution    = "Add the proper user to the local administrator group on the system either locally or via GP."
 		see_also   	= "https://docs.tenable.com/nessus/Content/EnableWindowsLoginsForLocalAndRemoteAudits.htm"
-		ps_check 	= "(Get-LocalGroupMember -Name Administrators).Name"
+		ps_check 	= '(Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_UserAccount").Name'
 		ps_result	= $Scanning_Accounts
 	}
 	@{

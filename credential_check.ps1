@@ -3,11 +3,13 @@
 ####
 # !!! THIS MUST BE DONE TO ENSURE ACCURATE VALIDATION !!!
 #
-# Define the scanning accounts being used.  If any of the defined accounts/groups are in the local Administrators group, the check will pass and
-# and note which accounts are present.  If none of the accounts are present, the check will fail.
+# Define the scanning accounts being used.  This script will not check group membership; so if you've 
+# added the account "DOMAIN\vuln_scan" to "DOMAIN\helpdesk_admins" and "DOMAIN\helpdesk_admins" is part 
+# of the Administrators group, add "DOMAIN\helpdesk_admins" below.
 #
 # Examples:
 # Local User: "vuln_scan"
+# Local Group: "Vuln Scanning Group"
 # Domain User: "DOMAIN\vuln_scan"
 # Domain User Group: "DOMAIN\Vuln Scanning Group"
 #
@@ -116,10 +118,10 @@ security model for local accounts"
 	@{
 		check_type  = 'powershell'
 		description = "Ensure the proper user/group is in the local Administrator user group."
-		info      	= "To perform a successful remote authenticated scan, Nessus must use an account that is a member of the local Administrators group. This script MUST BE EDITED to include the authorized administrator username or group."
+		info      	= "To perform a successful remote authenticated scan, Nessus must use an account that is a member of the local Administrators group. The script MUST be edited to include the authorized administrator username or group."
 		solution    = "Add the proper user to the local administrator group on the system either locally or via GP."
 		see_also   	= "https://docs.tenable.com/nessus/Content/EnableWindowsLoginsForLocalAndRemoteAudits.htm"
-		ps_check 	= '(Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_UserAccount").Name'
+		ps_check   	= '(Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_UserAccount") | Where-Object {$_.Domain -eq [Environment]::MachineName} | Select -exp Name; (Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_Group") | Where-Object {$_.Domain -eq [Environment]::MachineName} | Select -exp Name; (Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_UserAccount") | Where-Object {$_.Domain -ne [Environment]::MachineName} | Select -exp Caption; (Get-WMIObject Win32_Group -Filter "Name=''Administrators''").GetRelated("Win32_Group") | Where-Object {$_.Domain -ne [Environment]::MachineName} | Select -exp Caption'
 		ps_result	= $Scanning_Accounts
 	}
 	@{
@@ -227,7 +229,6 @@ function Compare-TENBPowerShell {
 		{
 			$ei = [regex]::Escape($i)
 			If ($Result -Match $ei) {Write-Host "$i is configured correctly."; $good_check = 1}
-			#Else {"$i is not configured."}
 		}
 		Write-Host ""
 		If ($good_check -eq 1) {"No changes needed. Correct configuration."}

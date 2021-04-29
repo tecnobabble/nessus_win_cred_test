@@ -201,6 +201,32 @@ be validated with the action taken to allow Nessus through the local firewall."
 
 			)
 	}
+	@{
+		check_type  = 'custom'
+		description = "LocalAccountTokenFilterPolicy (UAC Only)"
+		info      	= "If UAC is enabled, then disable it for remotely authenticated administrators."
+		solution    = "Windows User Account Control (UAC) must be disabled (not recommended for Domain member servers), or a specific registry setting should be changed to allow remote admin user command execution under certain circumstances.
+		
+		With UAC enabled, when a user in another domain is a member of the Administrators group on the local computer, the user cannot connect to the local computer remotely with Administrator privileges. By default, remote connections from other domains run with only standard user privilege tokens. However, you can use the LocalAccountTokenFilterPolicy registry entry to change the default behavior and allow remote users who are members of the Administrators group to run with Administrator privileges.  This setting may not be necessary for domain bound systems where the authenticating remote account is part of the same domain.
+      
+		For systems that are not domain bound, this setting (LocalAccountTokenFilterPolicy) is required to allow local administrator accounts to elevate permissions remotely.
+	  
+		To turn off UAC completely, open the Control Panel, select User Accounts and then set Turn User Account Control to Off.
+      
+		Alternatively, you can add a new registry DWORD named LocalAccountTokenFilterPolicy and set its value to '1'. This key must be created in the registry at the following location: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\LocalAccountTokenFilterPolicy"
+		see_also   	= "https://docs.tenable.com/nessus/Content/EnableWindowsLoginsForLocalAndRemoteAudits.htm,
+		https://support.microsoft.com/en-us/help/951016/description-of-user-account-control-and-remote-restrictions-in-windows,
+		https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_remote_troubleshooting?view=powershell-7,
+		https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings"
+		custom_check = @(
+			try { $UAC_Enabled = (Get-ItemProperty "Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLUA).EnableLUA }
+			catch { $UAC_Enabled = 0 }
+			try { $UAC_Remote_Admin = (Get-ItemProperty "Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy).LocalAccountTokenFilterPolicy }
+			catch { $UAC_Remote_Admin = 0 }
+			If ((( $UAC_Enabled -eq 1) -And ($UAC_Remote_Admin -ne 1))) {"1"}
+			Else {"0"}
+			)
+	}
 )
 
 

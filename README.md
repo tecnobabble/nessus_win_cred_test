@@ -9,6 +9,21 @@ This Powershell script is designed to be run on a supported (by Microsoft) Windo
 * This script MUST BE EDITED to provide the usernames of the account(s) authorized to run the Nessus check.  
 * This script may not identify all issues that prevent successful credentialed scans, but highlights the most common ones.  If you have suggestions for additional checks, please log an issue.  
 
+## Included Checks
+* Local Admin User/Group Requirements  
+* Ensure Remote Shares are Available (Client or Server)   
+* Windows Remote Registry Service Should be Enabled or Manual  
+* Windows Server Service Must be Enabled  
+* WMI Service Must be Enabled  
+* Users must authenticate as themselves, not Guest  
+* Minimum Windows Firewall Checks  
+    * Windows Management Instrumentation (DCOM-In)  
+    * Windows Management Instrumentation (WMI-In)  
+    * Windows Management Instrumentation (ASync-In)  
+    * File and Printer Sharing (SMB-In)  
+* Windows 10 > 1709 Auth Issues (SPN Validation)  
+* Symantec Endpoint Scan Blocking  
+
 ## Usage
 * Open an administrative PowerShell prompt and run the 'credential_check.ps1' script locally. This will output the result to the PowerShell prompt.  
 `.\credential_check.ps1`

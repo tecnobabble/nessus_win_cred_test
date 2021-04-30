@@ -15,9 +15,9 @@ This script checks for the following items:
    - Windows Management Instrumentation (WMI-In)
    - Windows Management Instrumentation (ASync-In)
    - File and Printer Sharing (SMB-In)
-Windows 10 > 1709 Auth Issues (SPN Validation)
-Symantec Endpoint Scan Blocking
-UAC Remote Auth Token Validation
+ - Windows 10 > 1709 Auth Issues (SPN Validation)
+ - Symantec Endpoint Scan Blocking
+ - UAC Remote Auth Token Validation
 
 Note:
  - This should be run with administrative privileges in the x64 Powershell console/construct.
@@ -37,8 +37,7 @@ Specifies the scanning accounts being used. Can accept multiple values comma sep
 .EXAMPLE
 .\credential_check.ps1 -ScanningAccounts "vuln_scan"
 
-Runs an assessment given the following account is authorized for vulnerability assessments:
-Local User: "vuln_scan"
+Runs an assessment given the local "vuln_scan" account is authorized for vulnerability assessments.
 
 .EXAMPLE
 .\credential_check.ps1 -ScanningAccounts "vuln_scan","DOMAIN\vuln_scan","DOMAIN\Vuln Scanning Group"
@@ -49,18 +48,20 @@ Domain User: "DOMAIN\vuln_scan"
 Domain User Group: "DOMAIN\Vuln Scanning Group"
 
 .EXAMPLE
+PS C:\>.\credential_check.ps1 -ScanningAccounts "vuln_scan" *> Nessus_Credential_Check_Status.txt  
+
 Push the output to a file so you have a standalone report.
-.\credential_check.ps1 -ScanningAccounts "vuln_scan" *> Nessus_Credential_Check_Status.txt
 
 .EXAMPLE
-Run the script on a remote system. This assumes Remote PowerShell Management is configured properly and working.
 Invoke-Command -ComputerName 203.0.113.5 -FilePath .\credential_check.ps1 -ScanningAccounts "vuln_scan"
+
+Run the script on a remote system. This assumes Remote PowerShell Management is configured properly and working.
 
 .LINK
 For more information, please see: https://github.com/tecnobabble/nessus_win_cred_test
 #>
 
-param([Parameter(ParameterSetName = 'Default')][array]$ScanningAccounts)
+param([Parameter(ParameterSetName = 'Default', Mandatory = $true)][array]$ScanningAccounts)
 
 $ErrorActionPreference = 'stop'
 
@@ -226,7 +227,7 @@ security model for local accounts"
                 #    Write-Host "The Windows Firewall $($_.Name) profile is disabled; skipping checks."
                 #} 
                 }
-                If($fwIssueFound -ne 1 ) {Write-Host "No changes needed. Correct configuration." }
+                If($fwIssueFound -ne 1 ) {"No changes needed. Correct configuration." }
                 Else {Write-Host "Note: This is auditing the minimum required built-in firewall rules as described in the documentation below. 
 It does not check for custom rules or third-party firewall configurations. As such, the results above should 
 be validated with the action taken to allow Nessus through the local firewall."
@@ -375,13 +376,12 @@ foreach ($check in $checks)
     Write-Host "Checking `"$($check.description)`""
     Write-Host
 
-    Switch ($check.check_type)
-    {
-        'registry' {Compare-TENBRegistry $check.reg_key $check.reg_name $check.reg_value}
-        'service' {Compare-TENBService}
-        'powershell' {Compare-TENBPowerShell}
-        'custom' {Compare-TENBCustom}
-        'firewall' {Compare-TENBFirewall}
+    switch ($check.check_type) {
+		'registry' { Compare-TENBRegistry $check.reg_key $check.reg_name $check.reg_value }
+		'service' { Compare-TENBService }
+		'powershell' { Compare-TENBPowerShell}
+		'custom' { Compare-TENBCustom }
+		'firewall' { Compare-TENBFirewall }
     }#end Switch check.check_type
     Write-Host "--------------------------------------------------------"
     Write-Host

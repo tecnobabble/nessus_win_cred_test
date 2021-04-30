@@ -6,7 +6,7 @@ This Powershell script is designed to be run on a supported (by Microsoft) Windo
 * This should be run with administrative privileges in the x64 Powershell console/construct.  
 * The [PowerShell Execution Policies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1) may have to be changed to allow the script to run   
 * No changes are made to the target system.  Review the output and manually make any changes required.  
-* This script MUST BE EDITED to provide the usernames of the account(s) authorized to run the Nessus check.
+* You must pass the usernames of the account(s) authorized to run the Nessus check in order to run the assessment.
 * This script may not identify all issues that prevent successful credentialed scans, but highlights the most common ones.  If you have suggestions for additional checks, please log an issue. 
 * This script may identify settings that do not need to be adjusted due to other system configurations. Where known, these details are called out in the notes of the check; please review them carefully.  
 

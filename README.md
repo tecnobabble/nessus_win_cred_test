@@ -38,7 +38,7 @@ This Powershell script is designed to be run on a supported (by Microsoft) Windo
     * Domain User: "DOMAIN\vuln_scan"  
     * Domain User Group: "DOMAIN\Vuln Scanning Group"  
 
-`.\credential_check.ps1 -ScanningAccounts "vuln_scan","DOMAIN\vuln_scan","DOMAIN\Vuln Scanning Group"`
+    `.\credential_check.ps1 -ScanningAccounts "vuln_scan","DOMAIN\vuln_scan","DOMAIN\Vuln Scanning Group"`
 
 * Push the output to a file so you have a standalone report.  
 `.\credential_check.ps1 -ScanningAccounts "vuln_scan" *> Nessus_Credential_Check_Status.txt`

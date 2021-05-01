@@ -53,5 +53,7 @@ This tool is not an officially supported Tenable project.
 Use of this tool is subject to the terms and conditions identified below, and is not subject to any license agreement you may have with Tenable.
 
 ## License
+GNU General Public License v3.0; see [LICENSE](https://github.com/tecnobabble/nessus_win_cred_test/blob/main/LICENSE)
 
-GNU General Public License v3.0; see LICENSE
+## Contributing
+See details [here](https://github.com/tecnobabble/nessus_win_cred_test/blob/main/CONTRIBUTING.MD)

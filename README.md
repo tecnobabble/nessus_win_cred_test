@@ -1,4 +1,4 @@
-# Nessus Credentialed Readiness Check
+# Nessus Credentialed Assessment Readiness Check (Windows)
 
 This Powershell script is designed to be run on a supported (by Microsoft) Windows host.  It checks for the most common issues that may prevent successful credentialed scans by Nessus.  
 

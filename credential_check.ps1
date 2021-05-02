@@ -80,8 +80,8 @@ $checks = @(
         default setting."
         solution    = "Remove the 'AutoShareServer' registry key from the location below or change the value to '1'.  For 
         client systems, this key is 'AutoShareWks'.
-      
-      HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters"
+        
+        HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters"
         see_also    = 'https://community.tenable.com/s/article/Troubleshooting-Credential-scanning-on-Windows
         https://support.microsoft.com/en-us/help/842715/overview-of-problems-that-may-occur-when-administrative-shares-are-mis'
     }
@@ -98,8 +98,8 @@ $checks = @(
         setting."
         solution    = "Remove the 'AutoShareWks' registry key from the location below or change the value to '1'. For server 
         systems, this key is 'AutoShareServer'.
-      
-      HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters"
+        
+        HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters"
         see_also    = 'https://community.tenable.com/s/article/Troubleshooting-Credential-scanning-on-Windows
         https://support.microsoft.com/en-us/help/842715/overview-of-problems-that-may-occur-when-administrative-shares-are-mis'
     }
@@ -117,8 +117,9 @@ $checks = @(
         authenticate."
         solution    = "To establish the recommended configuration via GP, set the following UI path to Classic - local users 
         authenticate as themselves:
-Computer Configuration\Policies\Windows Settings\Security Settings\Local Policies\Security Options\Network access: Sharing and 
-security model for local accounts"
+        
+        Computer Configuration\Policies\Windows Settings\Security Settings\Local Policies\Security Options\Network access: Sharing and 
+        security model for local accounts"
         see_also    = 'https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-sharing-and-security-model-for-local-accounts
         https://docs.tenable.com/nessus/Content/EnableWindowsLoginsForLocalAndRemoteAudits.htm'
     }
@@ -127,11 +128,10 @@ security model for local accounts"
         description = "'Windows Management Instrumentation' Service must be set to Automatic"
         serv_name   = 'Winmgmt'
         serv_status = 'Auto'
-        info        = "The 'Windows Management Instrumentation' service enables WMI calls and is used for multiple plugin checks as well as essential Windows internals and must 
-        be enabled."
+        info        = "The 'Windows Management Instrumentation' service enables WMI calls and is used for multiple plugin checks as well as essential Windows internals and must be enabled."
         solution    = "To establish the recommended configuration via GP, set the 'Windows Management Instrumentation' service startup mode to Automatic:
-    
-    Computer Configuration\Windows Settings\Security Settings\System Services\Windows Management Insrumentation - Set the startup mode to Automatic"
+        
+        Computer Configuration\Windows Settings\Security Settings\System Services\Windows Management Insrumentation - Set the startup mode to Automatic"
         see_also    = 'https://docs.tenable.com/nessus/Content/CredentialedChecksOnWindows.htm'
     }
     @{
@@ -141,8 +141,8 @@ security model for local accounts"
         serv_status = 'Auto'
         info        = "The 'Server' service enables remote administrative access to the local system and must be enabled."
         solution    = "To establish the recommended configuration via GP, set the 'Server' service startup mode to Automatic:
-    
-    Computer Configuration\Windows Settings\Security Settings\System Services\Server - Set the startup mode to Automatic"
+        
+        Computer Configuration\Windows Settings\Security Settings\System Services\Server - Set the startup mode to Automatic"
         see_also    = 'https://docs.tenable.com/nessus/Content/CredentialedChecksOnWindows.htm'
     }
     @{
@@ -153,7 +153,8 @@ security model for local accounts"
         serv_status2 = 'Manual'
         info         = "The Remote Registry service should be enabled (it is disabled by default). It can be enabled to 'Automatic' for continuing audits or enabled as part of the scan policy. Using plugin IDs 42897 and 42898 (enabled in the scan policy), Nessus can enable the service just for the duration of the scan, however the service should not be 'Disabled' for this to function consistently across all Windows platforms."
         solution     = "To establish the recommended configuration via GP, set the 'Remote Registry' service startup mode to Automatic or Manual:
-    Computer Configuration\Windows Settings\Security Settings\System Services\Server - Set the startup mode to Automatic or Manual"
+        
+        Computer Configuration\Windows Settings\Security Settings\System Services\Server - Set the startup mode to Automatic or Manual"
         see_also     = 'https://docs.tenable.com/nessus/Content/CredentialedChecksOnWindows.htm'    
     }
     @{
@@ -173,9 +174,13 @@ security model for local accounts"
         see_also     = "https://community.tenable.com/s/article/Authentication-Issues-for-Windows-10-Version-1709-and-above
         https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-server-spn-target-name-validation-level"
         custom_check = @(
-            try { $SPN_Validation = (Get-ItemProperty Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters -Name SMBServerNameHardeningLevel).SMBServerNameHardeningLevel }
-            catch { $SPN_Validation = 0 }
-            $OS_Name = (gcim Win32_OperatingSystem | Select-Object Name).Name
+            try { 
+                $SPN_Validation = (Get-ItemProperty Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanServer\Parameters -Name SMBServerNameHardeningLevel).SMBServerNameHardeningLevel 
+            }
+            catch { 
+                $SPN_Validation = 0 
+            }
+            $OS_Name    = (gcim Win32_OperatingSystem | Select-Object Name).Name
             $OS_Release = (Get-ItemProperty "Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion" -Name ReleaseID).ReleaseID
             If ((( $SPN_Validation -eq 1) -Or ($SPN_Validation -eq 2)) -And ($OS_Name -Match "Windows 10") -And ($OS_Release -ge 1709) ) {"1"}
             Else {"0"}
@@ -230,8 +235,8 @@ security model for local accounts"
                 }
                 If($fwIssueFound -ne 1 ) {"No changes needed. Correct configuration." }
                 Else {Write-Host "Note: This is auditing the minimum required built-in firewall rules as described in the documentation below. 
-It does not check for custom rules or third-party firewall configurations. As such, the results above should 
-be validated with the action taken to allow Nessus through the local firewall."
+                It does not check for custom rules or third-party firewall configurations. As such, the results above should 
+                be validated with the action taken to allow Nessus through the local firewall."
                     Write-Host 
                     Write-Host "https://docs.tenable.com/nessus/Content/CredentialedChecksOnWindows.htm"}
             }
@@ -319,18 +324,34 @@ function Compare-TENBRegistry {
     $good_check = 0
     Try { $Result = (Get-ItemProperty $registryPath -Name $keyName).$keyName }
     Catch [System.Management.Automation.PSArgumentException]
-     { If ($($check.options) -eq 'can_be_null') {Write-Host "No changes needed. Correct configuration."; $good_check = 1; Return }
-     Else { Write-Warning -Message "$warning_message" Write-Warning -Message "The current status is `"$Result`""; Continue }}
-    Catch [System.Management.Automation.ItemNotFoundException]
-     { Write-Warning -Message "$warning_message" Write-Warning -Message "The current status is `"$Result`""; Continue }
-    Catch
-     { Write-Warning -Message "Something really weird happened.  You probably need to both fix this (below) and notify the dev of this script. 
-     
-     $warning_message"
-     Write-Warning -Message "The current status is `"$Result`""     }
+     { If ($($check.options) -eq 'can_be_null') {
+         Write-Host "No changes needed. Correct configuration." 
+         $good_check = 1
+         Return 
+         }
+     Else { 
+        Write-Warning -Message "$warning_message" 
+        Write-Warning -Message "The current status is `"$Result`""
+        Continue
+        }
+        }
+    Catch [System.Management.Automation.ItemNotFoundException] {
+        Write-Warning -Message "$warning_message" 
+        Write-Warning -Message "The current status is `"$Result`""; 
+        Continue 
+        }
+    Catch { 
+        Write-Warning -Message "Something really weird happened.  You probably need to both fix this (below) and notify the dev of this script. $warning_message"
+        Write-Warning -Message "The current status is `"$Result`""
+        }
     Finally { 
-        If ($Result -eq $($check.reg_value)) {Write-Host "No changes needed. Correct configuration."}
-        Elseif ($Result -ne $($check.reg_value) -and ($good_check -ne 1)) {Write-Warning -Message "$warning_message"; Write-Warning -Message "The current status is `"$Result`""}
+        If ($Result -eq $($check.reg_value)) {
+            Write-Host "No changes needed. Correct configuration."
+            }
+        Elseif ($Result -ne $($check.reg_value) -and ($good_check -ne 1)) {
+            Write-Warning -Message "$warning_message"
+            Write-Warning -Message "The current status is `"$Result`""
+            }
     }
 }
 
@@ -378,11 +399,11 @@ foreach ($check in $checks)
     Write-Host
 
     switch ($check.check_type) {
-		'registry' { Compare-TENBRegistry $check.reg_key $check.reg_name $check.reg_value }
-		'service' { Compare-TENBService }
-		'powershell' { Compare-TENBPowerShell}
-		'custom' { Compare-TENBCustom }
-		'firewall' { Compare-TENBFirewall }
+        'registry' { Compare-TENBRegistry $check.reg_key $check.reg_name $check.reg_value }
+        'service' { Compare-TENBService }
+        'powershell' { Compare-TENBPowerShell}
+        'custom' { Compare-TENBCustom }
+        'firewall' { Compare-TENBFirewall }
     }#end Switch check.check_type
     Write-Host "--------------------------------------------------------"
     Write-Host

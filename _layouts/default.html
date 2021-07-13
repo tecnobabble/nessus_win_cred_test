@@ -10,6 +10,14 @@
       ga('create', '{{ site.google_analytics }}', 'auto');
       ga('send', 'pageview');
     </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+    <script>
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date());
+       gtag('config', '{{ site.google_analytics }}');
+    </script>
     {% endif %}
     <meta name="google-site-verification" content="oUMUO7E9zlWdsEv5zsTrjWxAaxqCtRZgLwRqYLU2nYs" />
     <meta charset="UTF-8">

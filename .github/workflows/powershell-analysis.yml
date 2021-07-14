@@ -16,6 +16,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '37 22 * * 2'
+  workflow_dispatch:
     
 jobs:
   build:

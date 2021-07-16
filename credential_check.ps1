@@ -181,12 +181,11 @@ $checks = @(
                 $SPN_Validation = 0 
             }
             $OS_Name    = (gcim Win32_OperatingSystem | Select-Object Name).Name
-            $OS_Release = @{
-                try {
-                    (Get-ItemProperty "Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion" -Name ReleaseID).ReleaseID
-                }
-                catch {
-                    {"0"}
+            try {
+                $OS_Release = (Get-ItemProperty "Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion" -Name ReleaseID).ReleaseID
+            }
+            catch {
+                $OS_Release = 0
                 }
             If ((( $SPN_Validation -eq 1) -Or ($SPN_Validation -eq 2)) -And ($OS_Name -Match "Windows 10") -And ($OS_Release -ge 1709) ) {"1"}
             Else {"0"}
